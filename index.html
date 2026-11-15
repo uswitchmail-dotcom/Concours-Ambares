@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feuille de Marque - ASA Ambarès Tir à l'Arc</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- HTML5 QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        asa: {
+                            red: '#DC2626',      /* Rouge vif et percutant */
+                            darkred: '#991B1B',  /* Rouge foncé profond */
+                            lightred: '#FEF2F2', /* Rouge très pâle pour les fonds */
+                            accent: '#F87171',   /* Rouge clair accent */
+                            dark: '#18181B',     /* Noir/gris très foncé pour les contrastes */
+                            graybg: '#F4F4F5'    /* Fond gris neutre */
+                        },
+                        target: {
+                            yellow: '#EAB308',
+                            red: '#EF4444',
+                            blue: '#3B82F6',
+                            black: '#1E293B',
+                            white: '#F8FAFC',
+                            miss: '#64748B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; touch-action: manipulation; }
+        /* Style des scores de tir à l'arc officiels */
+        .badge-x { background-color: #EAB308; color: #000; font-weight: 900; }
+        .badge-10 { background-color: #EAB308; color: #000; font-weight: 800; }
+        .badge-9 { background-color: #EAB308; color: #000; font-weight: 700; }
+        .badge-8 { background-color: #EF4444; color: #FFF; font-weight: 700; }
+        .badge-7 { background-color: #EF4444; color: #FFF; font-weight: 700; }
+        .badge-6 { background-color: #3B82F6; color: #FFF; font-weight: 700; }
+        .badge-5 { background-color: #3B82F6; color: #FFF; font-weight: 700; }
+        .badge-4 { background-color: #1E293B; color: #FFF; font-weight: 700; }
+        .badge-3 { background-color: #1E293B; color: #FFF; font-weight: 700; }
+        .badge-2 { background-color: #F8FAFC; color: #1E293B; border: 1px solid #CBD5E1; font-weight: 700; }
+        .badge-1 { background-color: #F8FAFC; color: #1E293B; border: 1px solid #CBD5E1; font-weight: 700; }
+        .badge-m { background-color: #64748B; color: #FFF; font-weight: 700; }
+        
+        /* Animations fluides */
+        .fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Masquage pour impression */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+        }
+    </style>
+</head>
+<body class="bg-asa-graybg text-slate-800 min-h-full flex flex-col antialiased selection:bg-asa-red selection:text-white">
+
+    <!-- En-tête Principal de l'Application -->
+    <header class="bg-asa-dark text-white border-b-4 border-asa-red shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-asa-red to-asa-darkred flex items-center justify-center shadow-md border-2 border-white/20 overflow-hidden">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnEmx08FS5ydKsqgBXfWjF0AH-7uvn2E5v4ze0emhQrg&s" alt="Logo ASA Ambarès" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/48x48/DC2626/ffffff?text=ASA';">
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs uppercase tracking-widest bg-asa-red text-white font-extrabold px-2 py-0.5 rounded-md">ASA Ambarès</span>
+                        <span class="text-xs text-slate-400 font-medium">Tir à l'Arc</span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        Feuille de Marque Électronique
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Navigation / Mode actuel -->
+            <div class="flex items-center gap-2">
+                <div id="connection-status-badge" class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="sync-status-text">Prêt</span>
+                </div>
+                <button onclick="switchRole('portal')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+                    <i data-lucide="home" class="w-3.5 h-3.5 text-asa-red"></i> Accueil
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification / Toast global -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4"></div>
+
+    <!-- Conteneur principal -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col">
+
+        <!-- VUE 0 : PORTAIL DE CHOIX (Greffe ou Client) -->
+        <section id="view-portal" class="my-auto py-8 fade-in">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-white shadow-xl border-2 border-slate-200 mb-6 overflow-hidden p-2 mx-auto">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnEmx08FS5ydKsqgBXfWjF0AH-7uvn2E5v4ze0emhQrg&s" alt="Logo ASA Ambarès" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/96x96/DC2626/ffffff?text=ASA';">
+                </div>
+                <div class="inline-flex items-center gap-2 bg-asa-lightred border border-asa-red/30 px-4 py-1.5 rounded-full text-asa-red text-xs font-black uppercase tracking-wider mb-4">
+                    <i data-lucide="award" class="w-4 h-4"></i> Championnat & Concours Officiel
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                    Gestion de Concours de Tir à l'Arc
+                </h2>
+                <p class="text-sm sm:text-base text-slate-600">
+                    Choisissez votre mode d'accès pour démarrer la saisie ou superviser le concours depuis le poste greffe.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Carte Poste Greffe / Organisateur -->
+                <div onclick="openServerSetup()" class="group bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-slate-200 hover:border-asa-red cursor-pointer transition-all duration-300 hover:shadow-2xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-asa-lightred rounded-bl-full -mr-8 -mt-8 transition group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-asa-red text-white flex items-center justify-center shadow-lg mb-6 group-hover:rotate-6 transition">
+                            <i data-lucide="server" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-black uppercase tracking-wider text-asa-red bg-asa-lightred px-2.5 py-1 rounded-md">Organisateur / Greffe</span>
+                        <h3 class="text-2xl font-black text-slate-900 mt-2 mb-2">Poste Greffe & Serveur</h3>
+                        <p class="text-sm text-slate-600 mb-6">
+                            Créez un concours, configurez les cibles, générez les QR codes par poste et suivez les classements et feuilles de marque en temps réel.
+                        </p>
+                    </div>
+                    <div class="relative z-10 flex items-center justify-between pt-4 border-t border-slate-100">
+                        <span class="text-sm font-bold text-asa-red group-hover:translate-x-1 transition flex items-center gap-1">
+                            Lancer le Greffe <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </span>
+                        <span class="text-xs text-slate-400 font-medium">Tableau de bord</span>
+                    </div>
+                </div>
+
+                <!-- Carte Saisie Archer / Mobile -->
+                <div onclick="openClientScanPrompt()" class="group bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-slate-200 hover:border-slate-900 cursor-pointer transition-all duration-300 hover:shadow-2xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-bl-full -mr-8 -mt-8 transition group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg mb-6 group-hover:rotate-6 transition">
+                            <i data-lucide="smartphone" class="w-7 h-7 text-asa-red"></i>
+                        </div>
+                        <span class="text-xs font-black uppercase tracking-wider text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md">Tireur sur Cible</span>
+                        <h3 class="text-2xl font-black text-slate-900 mt-2 mb-2">Feuille de Marque Mobile</h3>
+                        <p class="text-sm text-slate-600 mb-6">
+                            Scannez le QR code de votre cible ou entrez le code concours pour saisir vos flèches directement depuis votre smartphone sur le pas de tir.
+                        </p>
+                    </div>
+                    <div class="relative z-10 flex items-center justify-between pt-4 border-t border-slate-100">
+                        <span class="text-sm font-bold text-slate-900 group-hover:translate-x-1 transition flex items-center gap-1">
+                            Saisir mes flèches <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </span>
+                        <span class="text-xs text-slate-400 font-medium">Mode Mobile</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VUE 1 : POSTE GREFFE / SERVEUR -->
+        <section id="view-server" class="hidden flex-col gap-6 fade-in">
+            <!-- Panneau de Configuration Initial du Concours (si pas encore actif) -->
+            <div id="server-setup-panel" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 max-w-2xl mx-auto w-full">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-asa-red text-white flex items-center justify-center font-black">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900">Nouveau Concours ASA Ambarès</h3>
+                        <p class="text-xs text-slate-500">Configurez les paramètres officiels de la compétition</p>
+                    </div>
+                </div>
+
+                <form id="competition-form" onsubmit="createCompetition(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nom du Concours</label>
+                        <input type="text" id="comp-name" required value="Concours Officiel ASA Ambarès 2026" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red focus:ring-2 focus:ring-asa-lightred outline-none text-sm font-medium">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Type d'Épreuve</label>
+                            <select id="comp-type" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium bg-white">
+                                <option value="salle">Tir en Salle (18m - 10 volées de 3 flèches)</option>
+                                <option value="taes">Tir Extérieur / TAE (70m/50m - 12 volées de 6 flèches)</option>
+                                <option value="custom">Format Personnalisé</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nombre de Cibles</label>
+                            <input type="number" id="comp-targets" min="1" max="50" value="10" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium">
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-asa-red hover:bg-asa-darkred text-white font-extrabold text-sm shadow-lg shadow-asa-red/25 transition flex items-center justify-center gap-2">
+                            <i data-lucide="play" class="w-4 h-4"></i> Démarrer le Concours & Générer les QR Codes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tableau de Bord Serveur (Actif) -->
+            <div id="server-dashboard-panel" class="hidden flex flex-col gap-6">
+                <!-- En-tête Concours & Actions -->
+                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-black uppercase tracking-widest bg-asa-lightred text-asa-red px-2 py-0.5 rounded">Greffe Actif</span>
+                            <span class="text-xs font-mono font-bold text-slate-500">Code : <span id="srv-display-code" class="text-asa-red font-black">ASA-0000</span></span>
+                        </div>
+                        <h2 id="srv-display-title" class="text-2xl font-black text-slate-900">Nom du Concours</h2>
+                        <p id="srv-display-meta" class="text-xs text-slate-500">Détails de l'épreuve</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="openServerTab('tab-leaderboard')" id="btn-tab-leaderboard" class="px-4 py-2.5 rounded-xl bg-asa-red text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
+                            <i data-lucide="trophy" class="w-4 h-4"></i> Classement Cibles
+                        </button>
+                        <button onclick="openServerTab('tab-qrcodes')" id="btn-tab-qrcodes" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-2 transition">
+                            <i data-lucide="qr-code" class="w-4 h-4"></i> QR Codes Cibles
+                        </button>
+                        <button onclick="exportServerCsv()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-2 transition">
+                            <i data-lucide="download" class="w-4 h-4"></i> Export CSV
+                        </button>
+                        <button onclick="runServerDemoSimulation()" class="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold text-xs flex items-center gap-2 transition" title="Simule des scores aléatoires sur les cibles">
+                            <i data-lucide="zap" class="w-4 h-4"></i> Simuler Scores
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Onglet 1 : Classement & Suivi en Direct -->
+                <div id="server-tab-leaderboard" class="server-tab-content flex flex-col gap-4">
+                    <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                        <div class="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="font-black text-slate-900 flex items-center gap-2">
+                                <i data-lucide="users" class="w-5 h-5 text-asa-red"></i> Suivi des Cibles et Scores en Direct
+                            </h3>
+                            <span class="text-xs text-slate-500">Mise à jour automatique</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-600 uppercase font-black tracking-wider text-[11px] border-b border-slate-200">
+                                        <th class="p-3 sm:p-4">Cible</th>
+                                        <th class="p-3 sm:p-4">Archer</th>
+                                        <th class="p-3 sm:p-4">Catégorie</th>
+                                        <th class="p-3 sm:p-4">Club</th>
+                                        <th class="p-3 sm:p-4 text-center">Volées Saisies</th>
+                                        <th class="p-3 sm:p-4 text-right">Total 10+X / X</th>
+                                        <th class="p-3 sm:p-4 text-right">Score Total</th>
+                                        <th class="p-3 sm:p-4 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="server-targets-tbody" class="divide-y divide-slate-100">
+                                    <!-- Rempli dynamiquement -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Onglet 2 : QR Codes et Accès Cibles -->
+                <div id="server-tab-qrcodes" class="server-tab-content hidden flex flex-col gap-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
+                        <div class="max-w-xl mb-6">
+                            <h3 class="text-xl font-black text-slate-900 mb-1">QR Codes par Cible & Inscription</h3>
+                            <p class="text-xs sm:text-sm text-slate-500">Imprimez ces QR codes ou projetez-les pour que les archers de chaque cible (1 à <span id="qr-max-target-lbl">10</span>) accèdent instantanément à leur feuille de marque mobile.</p>
+                        </div>
+
+                        <!-- Paramétrage URL publique -->
+                        <div class="bg-asa-lightred border border-asa-red/30 rounded-2xl p-4 mb-6">
+                            <div class="flex items-center gap-2 font-bold text-xs text-asa-red mb-1">
+                                <i data-lucide="globe" class="w-4 h-4"></i> URL Publique de l'Application
+                            </div>
+                            <p class="text-[11px] text-slate-600 mb-3">Si vous hébergez l'application sur un serveur web (GitHub Pages, Netlify...), entrez l'URL ci-dessous pour que les QR codes pointent vers ce lien public :</p>
+                            <div class="flex gap-2">
+                                <input type="text" id="srv-public-base-url" placeholder="https://votre-site.com/index.html" class="flex-1 px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-mono text-slate-800 outline-none">
+                                <button onclick="updateCustomBaseUrl(document.getElementById('srv-public-base-url').value)" class="px-4 py-2 bg-asa-red text-white rounded-xl font-bold text-xs hover:bg-asa-darkred transition">Appliquer</button>
+                                <button onclick="resetCustomBaseUrl()" class="px-3 py-2 bg-slate-200 text-slate-700 rounded-xl font-bold text-xs hover:bg-slate-300 transition">Réinitialiser</button>
+                            </div>
+                            <div id="srv-url-env-hint" class="text-[11px] mt-2 text-slate-500"></div>
+                        </div>
+
+                        <!-- QR Code Global Inscription -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-8 flex flex-col sm:flex-row items-center gap-6">
+                            <div id="qr-global-container" class="bg-white p-3 rounded-2xl border border-slate-300 shadow-sm shrink-0"></div>
+                            <div>
+                                <span class="text-xs font-black uppercase text-asa-red bg-asa-lightred px-2 py-0.5 rounded">Accès Universel / Inscription</span>
+                                <h4 class="text-lg font-black text-slate-900 mt-1">QR Code Général du Concours</h4>
+                                <p class="text-xs text-slate-600 mt-1 mb-3">Permet de choisir sa cible et de s'inscrire directement depuis n'importe quel smartphone.</p>
+                                <div class="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200">
+                                    <span class="text-xs font-bold text-slate-500">Code court :</span>
+                                    <span id="qr-global-short-code" class="font-mono font-black text-sm text-asa-red tracking-widest">ASA-0000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grille des QR Codes par Cible -->
+                        <h4 class="text-sm font-black uppercase tracking-wider text-slate-700 mb-4">QR Codes Individuels par Cible (1 à N)</h4>
+                        <div id="server-targets-qgrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Généré en JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VUE 2 : CLIENT MOBILE / ARCHER -->
+        <section id="view-client" class="hidden flex-col gap-4 fade-in max-w-xl mx-auto w-full">
+            <!-- Formulaire d'Enregistrement / Choix de Cible (si pas encore identifié) -->
+            <div id="client-setup-panel" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200">
+                <div class="text-center mb-6">
+                    <div class="w-12 h-12 rounded-2xl bg-asa-red text-white flex items-center justify-center mx-auto mb-3 shadow-lg">
+                        <i data-lucide="user-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-900">Feuille de Marque Mobile</h3>
+                    <p class="text-xs text-slate-500">Entrez vos informations de tir pour commencer</p>
+                </div>
+
+                <form onsubmit="joinCompetitionClient(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Code Concours (ex: ASA-1234)</label>
+                        <input type="text" id="client-input-code" required placeholder="ASA-XXXX" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red focus:ring-2 focus:ring-asa-lightred outline-none text-sm font-mono uppercase font-bold tracking-wider text-center">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Numéro de Cible</label>
+                            <input type="number" id="client-input-target" min="1" max="50" value="1" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-bold text-center">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Poste (Blason)</label>
+                            <select id="client-input-position" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-bold bg-white text-center">
+                                <option value="A">A (Haut-Gauche)</option>
+                                <option value="B">B (Haut-Droite)</option>
+                                <option value="C">C (Bas-Gauche)</option>
+                                <option value="D">D (Bas-Droite)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nom & Prénom de l'Archer</label>
+                        <input type="text" id="client-input-name" required placeholder="ex: DUPONT Jean" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Club d'Appartenance</label>
+                            <input type="text" id="client-input-club" required placeholder="ex: Bordeaux" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Arme</label>
+                            <select id="client-input-weapon" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium bg-white">
+                                <option value="CL">Classique (CL)</option>
+                                <option value="CO">Poulies (CO)</option>
+                                <option value="BB">Barebow (BB)</option>
+                                <option value="AD">Arc Droit (AD)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Catégorie d'Âge</label>
+                            <select id="client-input-category" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium bg-white">
+                                <option value="U11">U11 (Poussin)</option>
+                                <option value="U13">U13 (Benjamin)</option>
+                                <option value="U15">U15 (Minime)</option>
+                                <option value="U18">U18 (Cadet)</option>
+                                <option value="U21">U21 (Junior)</option>
+                                <option value="S1" selected>Senior 1 (S1)</option>
+                                <option value="S2">Senior 2 (S2)</option>
+                                <option value="S3">Senior 3 (S3)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Sexe</label>
+                            <select id="client-input-gender" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-asa-red outline-none text-sm font-medium bg-white">
+                                <option value="H">Homme (H)</option>
+                                <option value="F">Femme (F)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex gap-2">
+                        <button type="submit" class="flex-1 py-3.5 px-6 rounded-xl bg-asa-red hover:bg-asa-darkred text-white font-extrabold text-sm shadow-lg shadow-asa-red/25 transition flex items-center justify-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i> Accéder à ma Feuille de Marque
+                        </button>
+                        <button type="button" onclick="openQrScannerModal()" class="px-4 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center gap-2 transition" title="Scanner un QR Code avec la caméra">
+                            <i data-lucide="camera" class="w-5 h-5 text-asa-red"></i> Scanner
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Interface Active de Saisie Mobile (Feuille de Marque) -->
+            <div id="client-scoresheet-panel" class="hidden flex flex-col gap-4">
+                <!-- En-tête de la feuille de marque archer -->
+                <div class="bg-white rounded-3xl p-5 shadow-xl border border-slate-200 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span id="client-disp-comp-name" class="text-[10px] font-black uppercase tracking-wider bg-asa-lightred text-asa-red px-2 py-0.5 rounded">Concours ASA Ambarès</span>
+                            <h3 id="client-disp-archer-name" class="text-xl font-black text-slate-900 mt-1">Nom Prénom</h3>
+                            <p id="client-disp-meta" class="text-xs text-slate-500">Cible 1A • S1H CL • Club</p>
+                        </div>
+                        <button onclick="logoutClient()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition" title="Changer de profil">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- Compteurs globaux -->
+                    <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-center">
+                        <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                            <span class="block text-[10px] uppercase font-bold text-slate-400">Score Total</span>
+                            <span id="client-disp-total" class="text-2xl font-black text-asa-red">0</span>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                            <span class="block text-[10px] uppercase font-bold text-slate-400">10 + X</span>
+                            <span id="client-disp-10x" class="text-2xl font-black text-slate-900">0</span>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                            <span class="block text-[10px] uppercase font-bold text-slate-400">X (ou 9)</span>
+                            <span id="client-disp-x" class="text-2xl font-black text-slate-900">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volée Actuelle & Pavé Tactile -->
+                <div class="bg-white rounded-3xl p-5 shadow-xl border border-slate-200 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-black uppercase tracking-wider text-slate-500">Volée en cours</span>
+                            <h4 class="text-lg font-black text-slate-900">Volée n° <span id="client-current-end-num">1</span> / <span id="client-max-ends-lbl">10</span></h4>
+                        </div>
+                        <!-- Indicateur flèches saisies -->
+                        <div id="client-current-arrows-preview" class="flex gap-1.5">
+                            <!-- Généré en JS -->
+                        </div>
+                    </div>
+
+                    <!-- Pavé Tactile Officiel -->
+                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-2">
+                        <button onclick="inputArrowValue('X')" class="py-4 rounded-2xl badge-x text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">X</span>
+                            <span class="text-[9px] opacity-80">10 (centre)</span>
+                        </button>
+                        <button onclick="inputArrowValue('10')" class="py-4 rounded-2xl badge-10 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">10</span>
+                            <span class="text-[9px] opacity-80">Or</span>
+                        </button>
+                        <button onclick="inputArrowValue('9')" class="py-4 rounded-2xl badge-9 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">9</span>
+                            <span class="text-[9px] opacity-80">Or</span>
+                        </button>
+                        <button onclick="inputArrowValue('8')" class="py-4 rounded-2xl badge-8 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">8</span>
+                            <span class="text-[9px] opacity-80">Rouge</span>
+                        </button>
+                        <button onclick="inputArrowValue('7')" class="py-4 rounded-2xl badge-7 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">7</span>
+                            <span class="text-[9px] opacity-80">Rouge</span>
+                        </button>
+                        <button onclick="inputArrowValue('6')" class="py-4 rounded-2xl badge-6 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">6</span>
+                            <span class="text-[9px] opacity-80">Bleu</span>
+                        </button>
+                        <button onclick="inputArrowValue('5')" class="py-4 rounded-2xl badge-5 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">5</span>
+                            <span class="text-[9px] opacity-80">Bleu</span>
+                        </button>
+                        <button onclick="inputArrowValue('4')" class="py-4 rounded-2xl badge-4 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">4</span>
+                            <span class="text-[9px] opacity-80">Noir</span>
+                        </button>
+                        <button onclick="inputArrowValue('3')" class="py-4 rounded-2xl badge-3 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">3</span>
+                            <span class="text-[9px] opacity-80">Noir</span>
+                        </button>
+                        <button onclick="inputArrowValue('2')" class="py-4 rounded-2xl badge-2 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">2</span>
+                            <span class="text-[9px] opacity-80">Blanc</span>
+                        </button>
+                        <button onclick="inputArrowValue('1')" class="py-4 rounded-2xl badge-1 text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">1</span>
+                            <span class="text-[9px] opacity-80">Blanc</span>
+                        </button>
+                        <button onclick="inputArrowValue('M')" class="py-4 rounded-2xl badge-m text-lg shadow-sm hover:scale-105 transition active:scale-95 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black">M</span>
+                            présent <span class="text-[9px] opacity-80">Raté (0)</span>
+                        </button>
+                    </div>
+
+                    <!-- Contrôles volée -->
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="deleteLastArrow()" class="flex-1 py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition">
+                            <i data-lucide="delete" class="w-4 h-4 text-asa-red"></i> Effacer dernière
+                        </button>
+                        <button onclick="validateCurrentEnd()" id="btn-validate-end" class="flex-2 py-3 px-6 rounded-xl bg-asa-red hover:bg-asa-darkred text-white font-black text-xs shadow-md shadow-asa-red/20 flex items-center justify-center gap-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i data-lucide="check" class="w-4 h-4"></i> Valider Volée
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Récapitulatif Complet des Volées & Correction -->
+                <div class="bg-white rounded-3xl p-5 shadow-xl border border-slate-200">
+                    <h4 class="font-black text-slate-900 mb-3 flex items-center gap-2 text-sm">
+                        <i data-lucide="file-text" class="w-4 h-4 text-asa-red"></i> Historique de la Feuille de Marque
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-center text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] border-b border-slate-200">
+                                    <th class="p-2">Volée</th>
+                                    <th class="p-2" id="th-arr-1">Flèche 1</th>
+                                    <th class="p-2" id="th-arr-2">Flèche 2</th>
+                                    <th class="p-2" id="th-arr-3">Flèche 3</th>
+                                    <th class="p-2 th-ext-arrow hidden">Flèche 4</th>
+                                    <th class="p-2 th-ext-arrow hidden">Flèche 5</th>
+                                    <th class="p-2 th-ext-arrow hidden">Flèche 6</th>
+                                    <th class="p-2 font-black">Total</th>
+                                    <th class="p-2 font-black">Cumul</th>
+                                </tr>
+                            </thead>
+                            <tbody id="client-history-tbody" class="divide-y divide-slate-100">
+                                <!-- Généré en JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modale QR Code Plein Écran -->
+        <div id="qr-zoom-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print" onclick="closeQrModal()">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border-4 border-asa-red max-h-[92vh] overflow-y-auto" onclick="event.stopPropagation()">
+                <div class="inline-block px-3 py-1 rounded-full bg-asa-dark text-white text-xs font-extrabold uppercase tracking-wider mb-2">ASA Ambarès • Pas de Tir</div>
+                <h3 id="qr-modal-title" class="text-2xl font-black text-slate-900 mb-1">Cible 1</h3>
+                <p id="qr-modal-desc" class="text-xs text-slate-500 mb-3">Scannez ce QR Code avec votre smartphone pour ouvrir votre feuille de marque</p>
+                
+                <div id="qr-modal-container" class="qr-wrapper bg-white p-4 rounded-2xl border-2 border-slate-200 inline-block mb-3"></div>
+                
+                <div class="bg-asa-lightred border border-asa-red/30 rounded-xl p-2.5 mb-3">
+                    <span class="block text-[10px] font-bold uppercase text-slate-600">Code court pour saisie manuelle :</span>
+                    <span id="qr-modal-short-code" class="font-mono font-black text-xl text-asa-red tracking-widest">ASA-0000</span>
+                </div>
+
+                <div class="text-left bg-amber-50 border border-amber-300 rounded-xl p-3 mb-3 text-xs text-amber-900">
+                    <div class="font-bold flex items-center gap-1.5 mb-1">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-amber-600 shrink-0"></i>
+                        <span>Astuce mobile</span>
+                    </div>
+                    <p class="text-[11px] leading-relaxed">Si votre téléphone affiche une erreur, hébergez cette page sur un hébergeur web (ex: <strong>GitHub Pages</strong>, Netlify) et collez le lien ci-dessous pour actualiser les QR codes.</p>
+                </div>
+
+                <div class="flex items-center gap-1.5 bg-slate-100 p-2 rounded-xl mb-3 border border-slate-200">
+                    <input type="text" id="qr-modal-url" onchange="updateCustomBaseUrl(this.value)" placeholder="Collez votre URL publique ici..." class="w-full bg-transparent text-[11px] font-mono text-slate-700 outline-none">
+                    <button onclick="copyQrUrl()" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-200 text-asa-dark font-bold text-xs shadow-xs shrink-0 flex items-center gap-1">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copier
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="qr-modal-sim-btn" onclick="openMobileSimulatorFromModal()" class="py-2.5 px-3 rounded-xl bg-asa-dark text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 hover:bg-slate-800 transition">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-asa-red"></i> Simuler Mobile
+                    </button>
+                    <a id="qr-modal-open-link" href="#" target="_blank" class="py-2.5 px-3 rounded-xl bg-asa-red text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 hover:bg-asa-darkred transition">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> Nouvel Onglet
+                    </a>
+                </div>
+                <button onclick="closeQrModal()" class="mt-2 w-full py-2.5 px-4 rounded-xl bg-slate-200 text-slate-800 font-bold text-sm hover:bg-slate-300 transition">Fermer</button>
+            </div>
+        </div>
+
+        <!-- Modale Scanner QR Code Caméra (Client) -->
+        <div id="qr-scanner-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border-4 border-asa-red">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                        <i data-lucide="camera" class="w-5 h-5 text-asa-red"></i> Scanner le QR Code Cible
+                    </h3>
+                    <button onclick="closeQrScannerModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div id="reader" class="overflow-hidden rounded-2xl border border-slate-200 mb-4 bg-slate-900"></div>
+                <p class="text-xs text-slate-500 mb-4">Pointez la caméra de votre smartphone vers le QR code affiché sur le pas de tir ou l'écran du greffe.</p>
+                <button onclick="closeQrScannerModal()" class="w-full py-2.5 rounded-xl bg-slate-200 text-slate-800 font-bold text-sm hover:bg-slate-300 transition">Annuler</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500 no-print mt-auto">
+        <p class="font-semibold">ASA Ambarès - Section Tir à l'Arc • Feuille de Marque Électronique Officielle</p>
+    </footer>
+
+    <!-- Script Logique Application -->
+    <script>
+        // État Global de l'Application
+        let state = {
+            mode: 'portal', // 'portal', 'server', 'client'
+            activeCompId: null,
+            clientTarget: 1,
+            clientPosition: 'A',
+            customBaseUrl: localStorage.getItem('asa_custom_base_url') || '',
+            competitions: JSON.parse(localStorage.getItem('asa_competitions') || '{}'),
+            clientData: JSON.parse(localStorage.getItem('asa_client_session') || 'null'),
+            currentArrows: []
+        };
+
+        let html5QrCode = null;
+
+        // Initialisation au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            parseUrlParameters();
+            routeInitialView();
+            setInterval(pollServerData, 1500); // Synchronisation en temps réel toutes les 1.5s
+        });
+
+        // Gestionnaire de Toasts / Notifications
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-asa-red text-white' : 'bg-slate-900 text-white';
+            toast.className = `${bgClass} px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between gap-3 pointer-events-auto fade-in`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Analyse robuste des paramètres d'URL (?mode=client&concours=ID&cible=2 OU #client/ID/2)
+        function parseUrlParameters() {
+            const params = new URLSearchParams(window.location.search);
+            let mode = params.get('mode') || params.get('role');
+            let compId = params.get('concours');
+            let target = params.get('cible');
+
+            if (window.location.hash && window.location.hash.length > 1) {
+                const hashClean = window.location.hash.substring(1);
+                if (hashClean.startsWith('client')) {
+                    const parts = hashClean.split('/');
+                    mode = 'client';
+                    if (parts[1]) compId = parts[1];
+                    if (parts[2]) target = parts[2];
+                } else if (hashClean.startsWith('server')) {
+                    mode = 'server';
+                    const parts = hashClean.split('/');
+                    if (parts[1]) compId = parts[1];
+                }
+            }
+
+            if (compId) state.activeCompId = compId.toLowerCase();
+            if (target) state.clientTarget = parseInt(target) || 1;
+            if (mode === 'server') state.mode = 'server';
+            else if (mode === 'client') state.mode = 'client';
+        }
+
+        function routeInitialView() {
+            if (state.mode === 'server') {
+                enterServerMode();
+            } else if (state.mode === 'client') {
+                enterClientMode();
+            } else {
+                showSection('portal');
+            }
+        }
+
+        function switchRole(role) {
+            state.mode = role;
+            if (role === 'portal') {
+                window.history.pushState({}, '', window.location.pathname);
+                showSection('portal');
+            } else if (role === 'server') {
+                enterServerMode();
+            } else if (role === 'client') {
+                enterClientMode();
+            }
+        }
+
+        function showSection(sectionName) {
+            document.getElementById('view-portal').classList.add('hidden');
+            document.getElementById('view-server').classList.add('hidden');
+            document.getElementById('view-client').classList.add('hidden');
+
+            if (sectionName === 'portal') document.getElementById('view-portal').classList.remove('hidden');
+            if (sectionName === 'server') document.getElementById('view-server').classList.remove('hidden');
+            if (sectionName === 'client') document.getElementById('view-client').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // --- POSTE GREFFE / SERVEUR ---
+        function openServerSetup() {
+            state.mode = 'server';
+            showSection('server');
+            const activeId = state.activeCompId;
+            if (activeId && state.competitions[activeId]) {
+                renderServerDashboard(state.competitions[activeId]);
+            } else {
+                document.getElementById('server-setup-panel').classList.remove('hidden');
+                document.getElementById('server-dashboard-panel').classList.add('hidden');
+            }
+        }
+
+        function enterServerMode() {
+            state.mode = 'server';
+            showSection('server');
+            if (!state.activeCompId || !state.competitions[state.activeCompId]) {
+                const keys = Object.keys(state.competitions);
+                if (keys.length > 0) {
+                    state.activeCompId = keys[keys.length - 1];
+                } else {
+                    document.getElementById('server-setup-panel').classList.remove('hidden');
+                    document.getElementById('server-dashboard-panel').classList.add('hidden');
+                    return;
+                }
+            }
+            renderServerDashboard(state.competitions[state.activeCompId]);
+        }
+
+        function createCompetition(event) {
+            event.preventDefault();
+            const name = document.getElementById('comp-name').value;
+            const type = document.getElementById('comp-type').value;
+            const targetCount = parseInt(document.getElementById('comp-targets').value) || 10;
+            
+            const randomCode = 'ASA-' + Math.floor(1000 + Math.random() * 9000);
+            const compId = randomCode.toLowerCase();
+
+            let arrowsPerEnd = 3;
+            let totalEnds = 10;
+            if (type === 'taes') { arrowsPerEnd = 6; totalEnds = 12; }
+
+            const newComp = {
+                id: compId,
+                code: randomCode,
+                name: name,
+                type: type,
+                targetCount: targetCount,
+                arrowsPerEnd: arrowsPerEnd,
+                totalEnds: totalEnds,
+                archers: {}, // { "1A": { name, club, weapon, category, gender, scores: [ [10,9,8], ... ] } }
+                createdAt: Date.now()
+            };
+
+            state.competitions[compId] = newComp;
+            state.activeCompId = compId;
+            saveCompetitionsStorage();
+
+            showToast(`Concours "${name}" créé avec succès !`, 'success');
+            renderServerDashboard(newComp);
+        }
+
+        function saveCompetitionsStorage() {
+            localStorage.setItem('asa_competitions', JSON.stringify(state.competitions));
+        }
+
+        function renderServerDashboard(comp) {
+            document.getElementById('server-setup-panel').classList.add('hidden');
+            document.getElementById('server-dashboard-panel').classList.remove('hidden');
+
+            document.getElementById('srv-display-code').textContent = comp.code;
+            document.getElementById('srv-display-title').textContent = comp.name;
+            document.getElementById('srv-display-meta').textContent = `${comp.totalEnds} volées de ${comp.arrowsPerEnd} flèches (${comp.totalEnds * comp.arrowsPerEnd * 10} pts max) • ${comp.targetCount} cibles`;
+            document.getElementById('qr-max-target-lbl').textContent = comp.targetCount;
+            document.getElementById('qr-global-short-code').textContent = comp.code;
+
+            const detectedBase = detectCleanBaseUrl();
+            const urlInput = document.getElementById('srv-public-base-url');
+            if (urlInput && !urlInput.value) {
+                urlInput.value = state.customBaseUrl || detectedBase;
+            }
+            const isSandbox = isNonPublicUrl(urlInput ? urlInput.value : detectedBase);
+            const hintEl = document.getElementById('srv-url-env-hint');
+            if (hintEl) {
+                hintEl.innerHTML = isSandbox
+                    ? `<span class="text-amber-700 font-bold">⚠️ URL locale ou de prévisualisation :</span> Pour que les smartphones scannent sans erreur, hébergez la page sur un hébergeur web (ex: <a href="https://pages.github.com" target="_blank" class="underline text-blue-600">GitHub Pages</a>) et collez l'URL ci-dessus.`
+                    : `<span class="text-emerald-700 font-bold">✓ URL publique prête :</span> Les téléphones y accèderont instantanément.`;
+            }
+
+            generateServerQrCodes(comp);
+            renderServerLeaderboard();
+        }
+
+        function detectCleanBaseUrl() {
+            let rawUrl = window.location.href;
+            try {
+                if (window.top && window.top.location && window.top.location.href && !window.top.location.href.startsWith('about:')) {
+                    rawUrl = window.top.location.href;
+                }
+            } catch (e) {}
+            return rawUrl.split('?')[0].split('#')[0];
+        }
+
+        function isNonPublicUrl(urlStr) {
+            return /^(blob:|about:|file:|data:)/i.test(urlStr) || /scf\.usercontent\.goog|localhost|127\.0\.0\.1/i.test(urlStr);
+        }
+
+        window.updateCustomBaseUrl = (val) => {
+            state.customBaseUrl = val.trim();
+            localStorage.setItem('asa_custom_base_url', state.customBaseUrl);
+            const comp = state.competitions[state.activeCompId];
+            if (comp) renderServerDashboard(comp);
+            showToast("URL publique mise à jour pour les QR codes !", "success");
+        };
+
+        window.resetCustomBaseUrl = () => {
+            state.customBaseUrl = '';
+            localStorage.removeItem('asa_custom_base_url');
+            const urlInput = document.getElementById('srv-public-base-url');
+            if (urlInput) urlInput.value = detectCleanBaseUrl();
+            const comp = state.competitions[state.activeCompId];
+            if (comp) renderServerDashboard(comp);
+        };
+
+        function getClientBaseUrl(compId, targetNum = null) {
+            let base = state.customBaseUrl || detectCleanBaseUrl();
+            if (isNonPublicUrl(base) && !state.customBaseUrl) {
+                base = window.location.origin + window.location.pathname;
+            }
+            try {
+                const url = new URL(base, window.location.origin);
+                url.searchParams.set('mode', 'client');
+                url.searchParams.set('concours', compId);
+                if (targetNum) url.searchParams.set('cible', targetNum);
+                url.hash = targetNum ? `client/${compId}/${targetNum}` : `client/${compId}`;
+                return url.toString();
+            } catch (e) {
+                const query = targetNum ? `?mode=client&concours=${compId}&cible=${targetNum}#client/${compId}/${targetNum}` : `?mode=client&concours=${compId}#client/${compId}`;
+                return `${base}${query}`;
+            }
+        }
+
+        function generateServerQrCodes(comp) {
+            // QR Code Global
+            const globalCont = document.getElementById('qr-global-container');
+            globalCont.innerHTML = '';
+            const globalLink = getClientBaseUrl(comp.id);
+            new QRCode(globalCont, { text: globalLink, width: 140, height: 140, colorDark: "#18181B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+
+            // QR Codes par Cible (A par défaut)
+            const gridCont = document.getElementById('server-targets-qgrid');
+            gridCont.innerHTML = '';
+            for (let t = 1; t <= comp.targetCount; t++) {
+                const targetLink = getClientBaseUrl(comp.id, t);
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col items-center text-center shadow-xs hover:border-asa-red transition';
+                
+                const qrDivId = `qr-target-${t}`;
+                card.innerHTML = `
+                    <span class="text-xs font-black text-asa-red bg-asa-lightred px-2 py-0.5 rounded mb-2">Cible ${t}</span>
+                    <div id="${qrDivId}" class="bg-white p-2 rounded-xl border border-slate-200 mb-2 cursor-pointer" onclick="openQrModalForTarget(${t})"></div>
+                    <span class="text-[10px] font-bold text-slate-500 mb-2">Code: <strong class="text-slate-800">${comp.code}</strong> (Cible ${t})</span>
+                    <button onclick="openQrModalForTarget(${t})" class="w-full py-1.5 px-3 rounded-xl bg-asa-dark text-white font-bold text-xs hover:bg-slate-800 transition flex items-center justify-center gap-1">
+                        <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-asa-red"></i> Agrandir QR
+                    </button>
+                `;
+                gridCont.appendChild(card);
+                
+                new QRCode(document.getElementById(qrDivId), { text: targetLink, width: 110, height: 110, colorDark: "#18181B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+            }
+            lucide.createIcons();
+        }
+
+        function openServerTab(tabName) {
+            document.querySelectorAll('.server-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('btn-tab-leaderboard').className = 'px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs flex items-center gap-2 transition';
+            document.getElementById('btn-tab-qrcodes').className = 'px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs flex items-center gap-2 transition';
+
+            if (tabName === 'tab-leaderboard') {
+                document.getElementById('server-tab-leaderboard').classList.remove('hidden');
+                document.getElementById('btn-tab-leaderboard').className = 'px-4 py-2.5 rounded-xl bg-asa-red text-white font-bold text-xs flex items-center gap-2 shadow-sm transition';
+            } else {
+                document.getElementById('server-tab-qrcodes').classList.remove('hidden');
+                document.getElementById('btn-tab-qrcodes').className = 'px-4 py-2.5 rounded-xl bg-asa-red text-white font-bold text-xs flex items-center gap-2 shadow-sm transition';
+            }
+        }
+
+        function renderServerLeaderboard() {
+            const comp = state.competitions[state.activeCompId];
+            const tbody = document.getElementById('server-targets-tbody');
+            if (!comp || !tbody) return;
+
+            tbody.innerHTML = '';
+            let rowsHtml = '';
+
+            for (let t = 1; t <= comp.targetCount; t++) {
+                ['A', 'B', 'C', 'D'].forEach(pos => {
+                    const key = `${t}${pos}`;
+                    const archer = comp.archers[key];
+
+                    let scoreTotal = 0;
+                    let count10X = 0;
+                    let countX = 0;
+                    let endsCount = 0;
+
+                    if (archer && archer.scores) {
+                        archer.scores.forEach(end => {
+                            if (end && end.length > 0) {
+                                endsCount++;
+                                end.forEach(arrow => {
+                                    if (arrow === 'X') { scoreTotal += 10; count10X++; countX++; }
+                                    else if (arrow === '10') { scoreTotal += 10; count10X++; }
+                                    else if (arrow === '9') { scoreTotal += 9; }
+                                    else if (arrow === '8') { scoreTotal += 8; }
+                                    else if (arrow === '7') { scoreTotal += 7; }
+                                    else if (arrow === '6') { scoreTotal += 6; }
+                                    else if (arrow === '5') { scoreTotal += 5; }
+                                    else if (arrow === '4') { scoreTotal += 4; }
+                                    else if (arrow === '3') { scoreTotal += 3; }
+                                    else if (arrow === '2') { scoreTotal += 2; }
+                                    else if (arrow === '1') { scoreTotal += 1; }
+                                });
+                            }
+                        });
+                    }
+
+                    rowsHtml += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 sm:p-4 font-mono font-black text-asa-red">Cible ${t}${pos}</td>
+                            <td class="p-3 sm:p-4 font-bold text-slate-900">${archer ? archer.name : '<span class="text-slate-400 font-normal italic">Poste libre</span>'}</td>
+                            <td class="p-3 sm:p-4"><span class="px-2 py-0.5 rounded bg-slate-100 font-bold text-slate-700 text-[11px]">${archer ? `${archer.category}${archer.gender} ${archer.weapon}` : '-'}</span></td>
+                            <td class="p-3 sm:p-4 text-slate-600">${archer ? archer.club : '-'}</td>
+                            <td class="p-3 sm:p-4 text-center font-bold text-slate-700">${endsCount} / ${comp.totalEnds}</td>
+                            <td class="p-3 sm:p-4 text-right font-mono font-bold text-slate-700">${count10X} / ${countX}</td>
+                            <td class="p-3 sm:p-4 text-right font-mono font-black text-asa-red text-base">${scoreTotal}</td>
+                            <td class="p-3 sm:p-4 text-center">
+                                <button onclick="openClientForTargetDirect('${comp.id}', ${t}, '${pos}')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                                    Voir / Saisir
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tbody.innerHTML = rowsHtml;
+        }
+
+        function exportServerCsv() {
+            const comp = state.competitions[state.activeCompId];
+            if (!comp) return;
+
+            let csv = "Cible,Nom,Club,Arme,Categorie,Sexe,ScoreTotal,10+X,X,Volées\n";
+            for (let t = 1; t <= comp.targetCount; t++) {
+                ['A', 'B', 'C', 'D'].forEach(pos => {
+                    const archer = comp.archers[`${t}${pos}`];
+                    if (archer) {
+                        let scoreTotal = 0, c10 = 0, cx = 0;
+                        if (archer.scores) {
+                            archer.scores.forEach(end => {
+                                if (end) end.forEach(a => {
+                                    if (a === 'X') { scoreTotal += 10; c10++; cx++; }
+                                    else if (a === '10') { scoreTotal += 10; c10++; }
+                                    else if (a === '9') { scoreTotal += 9; }
+                                    else if (a === '8') { scoreTotal += 8; }
+                                    else if (a === '7') { scoreTotal += 7; }
+                                    else if (a === '6') { scoreTotal += 6; }
+                                    else if (a === '5') { scoreTotal += 5; }
+                                    else if (a === '4') { scoreTotal += 4; }
+                                    else if (a === '3') { scoreTotal += 3; }
+                                    else if (a === '2') { scoreTotal += 2; }
+                                    else if (a === '1') { scoreTotal += 1; }
+                                });
+                            });
+                        }
+                        csv += `"${t}${pos}","${archer.name}","${archer.club}","${archer.weapon}","${archer.category}","${archer.gender}",${scoreTotal},${c10},${cx},"${JSON.stringify(archer.scores)}"\n`;
+                    }
+                });
+            }
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Resultats_${comp.code}.csv`;
+            a.click();
+            showToast("Export CSV généré avec succès !", "success");
+        }
+
+        function runServerDemoSimulation() {
+            const comp = state.competitions[state.activeCompId];
+            if (!comp) return;
+
+            const possibleArrows = ['X', '10', '9', '9', '8', '8', '7', '6'];
+            ['1A', '1B', '2A', '3C'].forEach(posKey => {
+                if (!comp.archers[posKey]) {
+                    comp.archers[posKey] = {
+                        name: posKey === '1A' ? 'DUPONT Jean' : posKey === '1B' ? 'MARTIN Sophie' : posKey === '2A' ? 'LEROY Marc' : 'MOREAU Claire',
+                        club: 'ASA Ambarès',
+                        weapon: 'CL',
+                        category: 'S1',
+                        gender: posKey === '1B' || posKey === '3C' ? 'F' : 'H',
+                        scores: []
+                    };
+                }
+                const archer = comp.archers[posKey];
+                archer.scores = [];
+                for (let e = 0; e < comp.totalEnds; e++) {
+                    const endArr = [];
+                    for (let a = 0; a < comp.arrowsPerEnd; a++) {
+                        endArr.push(possibleArrows[Math.floor(Math.random() * possibleArrows.length)]);
+                    }
+                    archer.scores.push(endArr);
+                }
+            });
+
+            saveCompetitionsStorage();
+            renderServerLeaderboard();
+            showToast("Simulation de scores exécutée sur plusieurs cibles !", "success");
+        }
+
+        // Modale QR Code Cible spécifique
+        let currentModalTarget = 1;
+        function openQrModalForTarget(targetNum) {
+            currentModalTarget = targetNum;
+            const comp = state.competitions[state.activeCompId];
+            if (!comp) return;
+
+            document.getElementById('qr-modal-title').textContent = `Cible ${targetNum} (Postes A, B, C, D)`;
+            document.getElementById('qr-modal-short-code').textContent = comp.code;
+            
+            const container = document.getElementById('qr-modal-container');
+            container.innerHTML = '';
+            const link = getClientBaseUrl(comp.id, targetNum);
+            new QRCode(container, { text: link, width: 180, height: 180, colorDark: "#18181B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+
+            const urlInput = document.getElementById('qr-modal-url');
+            if (urlInput) urlInput.value = state.customBaseUrl || detectCleanBaseUrl();
+
+            document.getElementById('qr-modal-open-link').href = link;
+            document.getElementById('qr-zoom-modal').classList.remove('hidden');
+            document.getElementById('qr-zoom-modal').classList.add('flex');
+        }
+
+        function closeQrModal() {
+            document.getElementById('qr-zoom-modal').classList.add('hidden');
+            document.getElementById('qr-zoom-modal').classList.remove('flex');
+        }
+
+        function copyQrUrl() {
+            const link = getClientBaseUrl(state.activeCompId, currentModalTarget);
+            navigator.clipboard.writeText(link);
+            showToast("Lien de la cible copié dans le presse-papier !", "success");
+        }
+
+        function openMobileSimulatorFromModal() {
+            closeQrModal();
+            const comp = state.competitions[state.activeCompId];
+            if (!comp) return;
+            state.clientTarget = currentModalTarget;
+            state.clientPosition = 'A';
+            document.getElementById('client-input-code').value = comp.code;
+            document.getElementById('client-input-target').value = currentModalTarget;
+            enterClientMode();
+            showToast(`Simulateur ouvert sur la Cible ${currentModalTarget}A`, "success");
+        }
+
+
+        // --- POSTE CLIENT MOBILE / ARCHER ---
+        function openClientScanPrompt() {
+            state.mode = 'client';
+            showSection('client');
+            if (state.clientData && state.clientData.compId) {
+                renderClientScoresheet();
+            } else {
+                document.getElementById('client-setup-panel').classList.remove('hidden');
+                document.getElementById('client-scoresheet-panel').classList.add('hidden');
+            }
+        }
+
+        function enterClientMode() {
+            state.mode = 'client';
+            showSection('client');
+
+            const compId = state.activeCompId;
+            const targetNum = state.clientTarget;
+
+            if (compId) {
+                document.getElementById('client-input-code').value = compId.toUpperCase();
+                if (targetNum) document.getElementById('client-input-target').value = targetNum;
+            }
+
+            if (state.clientData && state.clientData.compId === compId) {
+                renderClientScoresheet();
+            } else {
+                document.getElementById('client-setup-panel').classList.remove('hidden');
+                document.getElementById('client-scoresheet-panel').classList.add('hidden');
+            }
+        }
+
+        function joinCompetitionClient(event) {
+            event.preventDefault();
+            const codeInput = document.getElementById('client-input-code').value.trim().toLowerCase();
+            const targetNum = parseInt(document.getElementById('client-input-target').value) || 1;
+            const position = document.getElementById('client-input-position').value;
+            const name = document.getElementById('client-input-name').value.trim();
+            const club = document.getElementById('client-input-club').value.trim();
+            const weapon = document.getElementById('client-input-weapon').value;
+            const category = document.getElementById('client-input-category').value;
+            const gender = document.getElementById('client-input-gender').value;
+
+            // Vérifier si le concours existe dans le stockage
+            let comp = state.competitions[codeInput];
+            if (!comp) {
+                // Recherche par code court
+                const foundKey = Object.keys(state.competitions).find(k => state.competitions[k].code.toLowerCase() === codeInput);
+                if (foundKey) {
+                    comp = state.competitions[foundKey];
+                } else {
+                    // Création automatique de secours si le client rejoint un code distant
+                    comp = {
+                        id: codeInput,
+                        code: codeInput.toUpperCase(),
+                        name: "Concours Officiel ASA Ambarès",
+                        type: "salle",
+                        targetCount: 20,
+                        arrowsPerEnd: 3,
+                        totalEnds: 10,
+                        archers: {},
+                        createdAt: Date.now()
+                    };
+                    state.competitions[compId] = comp;
+                }
+            }
+
+            state.activeCompId = comp.id;
+            state.clientTarget = targetNum;
+            state.clientPosition = position;
+
+            state.clientData = {
+                compId: comp.id,
+                targetKey: `${targetNum}${position}`,
+                name, club, weapon, category, gender
+            };
+
+            localStorage.setItem('asa_client_session', JSON.stringify(state.clientData));
+            saveCompetitionsStorage();
+
+            // S'assurer que l'archer existe dans le dictionnaire du concours
+            const targetKey = state.clientData.targetKey;
+            if (!comp.archers[targetKey]) {
+                comp.archers[targetKey] = {
+                    name, club, weapon, category, gender,
+                    scores: []
+                };
+            } else {
+                comp.archers[targetKey].name = name;
+                comp.archers[targetKey].club = club;
+                comp.archers[targetKey].weapon = weapon;
+                comp.archers[targetKey].category = category;
+                comp.archers[targetKey].gender = gender;
+            }
+            saveCompetitionsStorage();
+
+            renderClientScoresheet();
+            showToast("Feuille de marque initialisée avec succès !", "success");
+        }
+
+        function openClientForTargetDirect(compId, targetNum, position) {
+            state.activeCompId = compId;
+            state.clientTarget = targetNum;
+            state.clientPosition = position;
+            const comp = state.competitions[compId];
+            const targetKey = `${targetNum}${position}`;
+            const archer = comp && comp.archers[targetKey];
+
+            if (archer) {
+                state.clientData = {
+                    compId, targetKey,
+                    name: archer.name,
+                    club: archer.club,
+                    weapon: archer.weapon,
+                    category: archer.category,
+                    gender: archer.gender
+                };
+            } else {
+                state.clientData = {
+                    compId, targetKey,
+                    name: `Archer ${targetNum}${position}`,
+                    club: 'ASA Ambarès',
+                    weapon: 'CL',
+                    category: 'S1',
+                    gender: 'H'
+                };
+                comp.archers[targetKey] = { ...state.clientData, scores: [] };
+                saveCompetitionsStorage();
+            }
+
+            localStorage.setItem('asa_client_session', JSON.stringify(state.clientData));
+            enterClientMode();
+        }
+
+        function logoutClient() {
+            state.clientData = null;
+            localStorage.removeItem('asa_client_session');
+            document.getElementById('client-setup-panel').classList.remove('hidden');
+            document.getElementById('client-scoresheet-panel').classList.add('hidden');
+        }
+
+        function renderClientScoresheet() {
+            document.getElementById('client-setup-panel').classList.add('hidden');
+            document.getElementById('client-scoresheet-panel').classList.remove('hidden');
+
+            const comp = state.competitions[state.clientData.compId] || { name: 'Concours ASA Ambarès', arrowsPerEnd: 3, totalEnds: 10 };
+            const archer = comp.archers ? comp.archers[state.clientData.targetKey] : null;
+            if (!archer.scores) archer.scores = [];
+
+            document.getElementById('client-disp-comp-name').textContent = comp.name;
+            document.getElementById('client-disp-archer-name').textContent = state.clientData.name;
+            document.getElementById('client-disp-meta').textContent = `Cible ${state.clientData.targetKey} • ${state.clientData.category}${state.clientData.gender} ${state.clientData.weapon} • ${state.clientData.club}`;
+            document.getElementById('client-max-ends-lbl').textContent = comp.totalEnds;
+
+            // Ajustement affichage tableau colonnes flèches (3 ou 6)
+            const is6Arrows = comp.arrowsPerEnd === 6;
+            document.querySelectorAll('.th-ext-arrow').forEach(el => {
+                if (is6Arrows) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+            const currentEndIndex = archer.scores.length;
+            document.getElementById('client-current-end-num').textContent = Math.min(currentEndIndex + 1, comp.totalEnds);
+
+            if (currentEndIndex >= comp.totalEnds) {
+                document.getElementById('client-current-arrows-preview').innerHTML = `<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Concours terminé ! 🎉</span>`;
+            } else {
+                renderCurrentArrowsPreview(comp.arrowsPerEnd);
+            }
+
+            renderClientHistoryTable(comp);
+            updateClientTotals(comp);
+        }
+
+        function renderCurrentArrowsPreview(arrowsPerEnd) {
+            const container = document.getElementById('client-current-arrows-preview');
+            container.innerHTML = '';
+            for (let i = 0; i < arrowsPerEnd; i++) {
+                const val = state.currentArrows[i];
+                const span = document.createElement('span');
+                if (val) {
+                    span.className = `w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shadow-xs badge-${val.toLowerCase()}`;
+                    span.textContent = val;
+                } else {
+                    span.className = 'w-7 h-7 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs font-bold';
+                    span.textContent = i + 1;
+                }
+                container.appendChild(span);
+            }
+        }
+
+        function inputArrowValue(val) {
+            const comp = state.competitions[state.clientData.compId];
+            if (!comp) return;
+            const max = comp.arrowsPerEnd || 3;
+            if (state.currentArrows.length < max) {
+                state.currentArrows.push(val);
+                renderCurrentArrowsPreview(max);
+            }
+        }
+
+        function deleteLastArrow() {
+            if (state.currentArrows.length > 0) {
+                state.currentArrows.pop();
+                const comp = state.competitions[state.clientData.compId];
+                renderCurrentArrowsPreview(comp ? comp.arrowsPerEnd : 3);
+            }
+        }
+
+        function validateCurrentEnd() {
+            const comp = state.competitions[state.clientData.compId];
+            if (!comp) return;
+            const max = comp.arrowsPerEnd || 3;
+            if (state.currentArrows.length < max) {
+                showToast(`Veuillez saisir les ${max} flèches de la volée.`, "error");
+                return;
+            }
+
+            const archer = comp.archers[state.clientData.targetKey];
+            archer.scores.push([...state.currentArrows]);
+            state.currentArrows = [];
+            saveCompetitionsStorage();
+
+            renderClientScoresheet();
+            showToast("Volée validée et enregistrée !", "success");
+        }
+
+        function renderClientHistoryTable(comp) {
+            const tbody = document.getElementById('client-history-tbody');
+            tbody.innerHTML = '';
+            const archer = comp.archers[state.clientData.targetKey];
+            if (!archer || !archer.scores) return;
+
+            let runningTotal = 0;
+            let rowsHtml = '';
+            const maxArr = comp.arrowsPerEnd || 3;
+
+            archer.scores.forEach((end, idx) => {
+                let endSum = 0;
+                let endHtml = '';
+                for (let i = 0; i < maxArr; i++) {
+                    const v = end[i] || '-';
+                    if (v === 'X') endSum += 10;
+                    else if (v === '10') endSum += 10;
+                    else if (v === '9') endSum += 9;
+                    else if (v === '8') endSum += 8;
+                    else if (v === '7') endSum += 7;
+                    else if (v === '6') endSum += 6;
+                    else if (v === '5') endSum += 5;
+                    else if (v === '4') endSum += 4;
+                    else if (v === '3') endSum += 3;
+                    else if (v === '2') endSum += 2;
+                    else if (v === '1') endSum += 1;
+
+                    const badgeClass = v !== '-' ? `badge-${v.toLowerCase()} w-6 h-6 rounded-md inline-flex items-center justify-center font-bold text-xs` : 'text-slate-400';
+                    endHtml += `<td class="p-2"><span class="${badgeClass}">${v}</span></td>`;
+                }
+
+                // Colonnes flèches 4,5,6 vides si format salle 3 flèches
+                if (maxArr === 3) {
+                    endHtml += `<td class="p-2 th-ext-arrow hidden">-</td><td class="p-2 th-ext-arrow hidden">-</td><td class="p-2 th-ext-arrow hidden">-</td>`;
+                }
+
+                runningTotal += endSum;
+
+                rowsHtml += `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="p-2 font-black text-slate-700">V${idx + 1}</td>
+                        ${endHtml}
+                        <td class="p-2 font-mono font-bold text-slate-900">${endSum}</td>
+                        <td class="p-2 font-mono font-black text-asa-red">${runningTotal}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = rowsHtml;
+        }
+
+        function updateClientTotals(comp) {
+            const archer = comp.archers[state.clientData.targetKey];
+            if (!archer || !archer.scores) return;
+
+            let total = 0;
+            let c10X = 0;
+            let cX = 0;
+
+            archer.scores.forEach(end => {
+                end.forEach(v => {
+                    if (v === 'X') { total += 10; c10X++; cX++; }
+                    else if (v === '10') { total += 10; c10X++; }
+                    else if (v === '9') { total += 9; }
+                    else if (v === '8') { total += 8; }
+                    else if (v === '7') { total += 7; }
+                    else if (v === '6') { total += 6; }
+                    else if (v === '5') { total += 5; }
+                    else if (v === '4') { total += 4; }
+                    else if (v === '3') { total += 3; }
+                    else if (v === '2') { total += 2; }
+                    else if (v === '1') { total += 1; }
+                });
+            });
+
+            document.getElementById('client-disp-total').textContent = total;
+            document.getElementById('client-disp-10x').textContent = c10X;
+            document.getElementById('client-disp-x').textContent = cX;
+        }
+
+        // --- SCANNER QR CODE & SYNCHRO ---
+        function openQrScannerModal() {
+            document.getElementById('qr-scanner-modal').classList.remove('hidden');
+            document.getElementById('qr-scanner-modal').classList.add('flex');
+
+            setTimeout(() => {
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    (decodedText) => {
+                        handleScannedUrl(decodedText);
+                        closeQrScannerModal();
+                    },
+                    (errorMessage) => {}
+                ).catch(err => {
+                    showToast("Impossible d'accéder à la caméra.", "error");
+                });
+            }, 300);
+        }
+
+        function closeQrScannerModal() {
+            if (html5QrCode) {
+                html5QrCode.stop().catch(() => {}).finally(() => {
+                    html5QrCode = null;
+                });
+            }
+            document.getElementById('qr-scanner-modal').classList.add('hidden');
+            document.getElementById('qr-scanner-modal').classList.remove('flex');
+        }
+
+        function handleScannedUrl(urlStr) {
+            try {
+                const url = new URL(urlStr);
+                const mode = url.searchParams.get('mode');
+                const compId = url.searchParams.get('concours');
+                const target = url.searchParams.get('cible');
+
+                if (compId) {
+                    document.getElementById('client-input-code').value = compId.toUpperCase();
+                    if (target) document.getElementById('client-input-target').value = target;
+                    showToast("QR code scanné avec succès !", "success");
+                }
+            } catch (e) {
+                showToast("Format de QR Code non reconnu.", "error");
+            }
+        }
+
+        function pollServerData() {
+            const stored = localStorage.getItem('asa_competitions');
+            if (stored) {
+                state.competitions = JSON.parse(stored);
+                if (state.mode === 'server' && state.activeCompId) {
+                    renderServerLeaderboard();
+                } else if (state.mode === 'client' && state.clientData) {
+                    const comp = state.competitions[state.clientData.compId];
+                    if (comp) {
+                        renderClientScoresheet();
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
